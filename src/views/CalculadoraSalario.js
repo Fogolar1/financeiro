@@ -10,6 +10,7 @@ import {
 import { TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { PieChart } from '@mui/x-charts/PieChart';
 
 const CalculadoraSalario = () => {
 	const currencyMask = (value) => {
@@ -35,6 +36,11 @@ const CalculadoraSalario = () => {
 		setOutrosDescontos(inputValue);
 	};
 
+	const salarioBrutoNumber = () => {
+		return parseFloat(salarioBruto.replace('R$ ', '').replace('.', ''));
+	};
+
+	//TODO - Calculo de horas extras
 	const calcularSalarioLiquido = () => {
 		let salarioBrutoNumber = salarioBruto.replace('R$ ', '').replace('.', '');
 		let outrosDescontosNumber = outrosDescontos
@@ -43,31 +49,52 @@ const CalculadoraSalario = () => {
 
 		salarioBrutoNumber = parseFloat(salarioBrutoNumber);
 		outrosDescontosNumber = parseFloat(outrosDescontosNumber);
-		let inssAliquota = 0;
 
-		if (salarioBrutoNumber <= 1412) inssAliquota = 0.075;
-		else if (salarioBrutoNumber <= 2666.68) inssAliquota = 0.09;
-		else if (salarioBrutoNumber <= 4000.03) inssAliquota = 0.12;
-		else inssAliquota = 0.14;
+		let descontoInssAux = 0;
+		if (salarioBrutoNumber <= 1412)
+			descontoInssAux = salarioBrutoNumber * 0.075;
+		else if (salarioBrutoNumber <= 2666.68) {
+			descontoInssAux = 1412 * 0.075;
+			descontoInssAux += (salarioBrutoNumber - 1412) * 0.09;
+		} else if (salarioBrutoNumber <= 4000.03) {
+			descontoInssAux = 1412 * 0.075;
+			descontoInssAux += (2666.68 - 1412) * 0.09;
+			descontoInssAux += (salarioBrutoNumber - 2666.68) * 0.12;
+		} else if (salarioBrutoNumber <= 7786.02) {
+			descontoInssAux = 1412 * 0.075;
+			descontoInssAux += (2666.68 - 1412) * 0.09;
+			descontoInssAux += (7786.02 - 2666.68) * 0.12;
+			descontoInssAux += (salarioBrutoNumber - 7786.02) * 0.14;
+		} else if (salarioBrutoNumber > 7786.02) descontoInssAux = 908.85;
 
-		let irrfAliquota = 0;
-		if (salarioBrutoNumber > 2259.2 && salarioBrutoNumber <= 2826.65)
-			irrfAliquota = 0.075;
-		else if (salarioBrutoNumber <= 3751.05) irrfAliquota = 0.15;
-		else if (salarioBrutoNumber <= 4664.68) irrfAliquota = 0.225;
-		else irrfAliquota = 0.275;
+		setDescontoInss(descontoInssAux);
+		let baseIrrf = salarioBrutoNumber - descontoInssAux;
+		console.log(baseIrrf);
 
-		let descontInss = salarioBrutoNumber * inssAliquota;
-		let descontIrrf = salarioBrutoNumber * irrfAliquota - descontInss;
-		let salarioLiquido =
-			salarioBrutoNumber - descontInss - descontIrrf - outrosDescontosNumber;
+		let descontoIrrfAux = 0;
+		if (baseIrrf <= 2112) descontoIrrfAux = 0;
+		else if (baseIrrf <= 2826.65) descontoIrrfAux = baseIrrf * 0.075 - 169.44;
+		else if (baseIrrf <= 3751.05) descontoIrrfAux = baseIrrf * 0.15 - 381.44;
+		else if (baseIrrf <= 4664.68) descontoIrrfAux = baseIrrf * 0.225 - 662.77;
+		else descontoIrrfAux = baseIrrf * 0.275 - 896;
 
-		console.log(salarioLiquido);
+		setDescontoIrrf(descontoIrrfAux);
+
+		setSalarioLiquido(
+			salarioBrutoNumber -
+				descontoInssAux -
+				descontoIrrfAux -
+				outrosDescontosNumber
+		);
 	};
 
 	const [horasExtras, setHorasExtras] = React.useState(
-		dayjs('2024-01-01T15:30')
+		dayjs('2024-01-01T00:00')
 	);
+
+	const [salarioLiquido, setSalarioLiquido] = React.useState(0);
+	const [descontoInss, setDescontoInss] = React.useState(0);
+	const [descontoIrrf, setDescontoIrrf] = React.useState(0);
 
 	return (
 		<Container>
@@ -93,6 +120,7 @@ const CalculadoraSalario = () => {
 						display: 'flex',
 						justifyContent: 'center',
 						border: '1px solid black',
+						flexDirection: 'column',
 					}}
 				>
 					<FormControl sx={{ width: '100%' }}>
@@ -150,6 +178,55 @@ const CalculadoraSalario = () => {
 							</Button>
 						</Container>
 					</FormControl>
+
+					{salarioLiquido > 0 && (
+						<Container
+							sx={{
+								display: 'flex',
+								height: 100,
+								flexDirection: 'row',
+								marginTop: 5,
+								width: '100%',
+							}}
+						>
+							<Container>
+								<Typography variant="h6" sx={{ marginLeft: 20 }}>
+									Salário líquido: R$ {salarioLiquido.toFixed(2)}
+								</Typography>
+								<Typography variant="subtitle1" sx={{ marginLeft: 20 }}>
+									Desconto IRRF: R$ {descontoIrrf.toFixed(2)}
+								</Typography>
+								<Typography variant="subtitle1" sx={{ marginLeft: 20 }}>
+									Desconto INSS: R$ {descontoInss.toFixed(2)}
+								</Typography>
+							</Container>
+							<PieChart
+								width={500}
+								height={170}
+								sx={{ marginBottom: 8, marginRight: 20 }}
+								series={[
+									{
+										data: [
+											{
+												id: 0,
+												value: salarioLiquido.toFixed(2),
+												label: 'Salário Líquido',
+												coplor: 'green',
+											},
+											{
+												id: 1,
+												value: (salarioBrutoNumber() - salarioLiquido).toFixed(
+													2
+												),
+												label: 'Descontos',
+												color: 'red',
+											},
+										],
+									},
+								]}
+							></PieChart>
+						</Container>
+					)}
 				</Box>
 			</Container>
 		</Container>
