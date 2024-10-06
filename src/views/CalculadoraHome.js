@@ -3,11 +3,12 @@ import { Container, Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import SvgIcon from '@mui/material/SvgIcon';
-import CalculateIcon from '@mui/icons-material/Calculate';
-import SavingsIcon from '@mui/icons-material/Savings';
 import '../assets/css/home.css';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 
-const Home = () => {
+const CalculadoraHome = () => {
 	let navigate = useNavigate();
 	const routeChange = (path) => {
 		navigate(path);
@@ -26,7 +27,7 @@ const Home = () => {
 				>
 					<Button
 						variant="text"
-						onClick={() => routeChange('calculadora')}
+						onClick={() => routeChange('salario')}
 						sx={{
 							minWidth: 300,
 							minHeight: 300,
@@ -36,12 +37,17 @@ const Home = () => {
 						color="black"
 						className="float-on-hover"
 					>
-						<Box sx={{ display: 'flex', flexDirection: 'column' }}>
+						<Box
+							sx={{
+								display: 'flex',
+								flexDirection: 'column',
+							}}
+						>
 							<SvgIcon
-								component={CalculateIcon}
+								component={PaymentsIcon}
 								sx={{ width: 200, height: 200 }}
 							/>
-							Calculadora
+							Salário Líquido
 						</Box>
 					</Button>
 					<Button
@@ -57,10 +63,29 @@ const Home = () => {
 					>
 						<Box sx={{ display: 'flex', flexDirection: 'column' }}>
 							<SvgIcon
-								component={SavingsIcon}
+								component={CalendarMonthIcon}
 								sx={{ width: 200, height: 200 }}
 							/>
-							Controle de finanças
+							Férias
+						</Box>
+					</Button>
+					<Button
+						variant="text"
+						sx={{
+							minWidth: 300,
+							minHeight: 300,
+							color: 'black',
+							margin: 10,
+						}}
+						color="black"
+						className="float-on-hover"
+					>
+						<Box sx={{ display: 'flex', flexDirection: 'column' }}>
+							<SvgIcon
+								component={HandshakeIcon}
+								sx={{ width: 200, height: 200 }}
+							/>
+							Recisão
 						</Box>
 					</Button>
 				</Box>
@@ -69,4 +94,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default CalculadoraHome;
