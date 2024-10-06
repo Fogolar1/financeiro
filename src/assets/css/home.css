@@ -1,0 +1,12 @@
+.float-on-hover {
+	transform: perspective(1px) translateZ(0);
+	transition-duration: 0.5s;
+	transition-property: transform;
+	transition-timing-function: ease-out;
+}
+
+.float-on-hover:hover,
+.float-on-hover:focus,
+.float-on-hover:active {
+	transform: translateY(-20px);
+}
