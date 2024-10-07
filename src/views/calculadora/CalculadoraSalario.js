@@ -11,6 +11,8 @@ import { TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { PieChart } from '@mui/x-charts/PieChart';
+import NavBar from '../../components/NavBar';
+import ReturnButton from '../../components/ReturnButton';
 
 const CalculadoraSalario = () => {
 	const currencyMask = (value) => {
@@ -97,7 +99,9 @@ const CalculadoraSalario = () => {
 	const [descontoIrrf, setDescontoIrrf] = React.useState(0);
 
 	return (
-		<Container>
+		<Container sx={{ minWidth: '100%' }} disableGutters>
+			<NavBar />
+			<ReturnButton />
 			<Typography
 				variant="h4"
 				gutterBottom

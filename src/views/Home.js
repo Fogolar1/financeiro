@@ -32,6 +32,7 @@ const Home = () => {
 							minHeight: 300,
 							color: 'black',
 							margin: 10,
+							marginTop: -5,
 						}}
 						color="black"
 						className="float-on-hover"
@@ -51,6 +52,7 @@ const Home = () => {
 							minHeight: 300,
 							color: 'black',
 							margin: 10,
+							marginTop: -5,
 						}}
 						color="black"
 						className="float-on-hover"

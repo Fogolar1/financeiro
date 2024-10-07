@@ -54,11 +54,15 @@ const NavBar = () => {
 							'aria-labelledby': 'basic-button',
 						}}
 					>
-						<MenuItem onClick={() => routeChange('calcSalario')}>
+						<MenuItem onClick={() => routeChange('/calculadora/salario')}>
 							Salário Líquido
 						</MenuItem>
-						<MenuItem onClick={handleClose}>Férias</MenuItem>
-						<MenuItem onClick={handleClose}>Recisão</MenuItem>
+						<MenuItem onClick={() => routeChange('/calculadora/ferias')}>
+							Férias
+						</MenuItem>
+						<MenuItem onClick={() => routeChange('/calculadora/recisao')}>
+							Recisão
+						</MenuItem>
 					</Menu>
 				</Box>
 				<Box sx={{ flexGrow: 0.1, maxWidth: 200 }}>
