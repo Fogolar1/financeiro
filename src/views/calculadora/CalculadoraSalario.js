@@ -71,7 +71,6 @@ const CalculadoraSalario = () => {
 
 		setDescontoInss(descontoInssAux);
 		let baseIrrf = salarioBrutoNumber - descontoInssAux;
-		console.log(baseIrrf);
 
 		let descontoIrrfAux = 0;
 		if (baseIrrf <= 2112) descontoIrrfAux = 0;
